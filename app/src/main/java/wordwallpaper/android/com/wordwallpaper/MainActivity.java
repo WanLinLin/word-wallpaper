@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -27,7 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private float scaledSize;
     private boolean confirm = false;
     private Point size;
+    private int maxStringLen = 15;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,8 +151,12 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap[] textToBitmap(String inputString) {
         Bitmap b = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
+        float fontSize;
 
-        float fontSize = scaledSize * 11 / inputString.length();
+        if (inputString.length() < maxStringLen / 2)
+            fontSize = scaledSize * 11 / inputString.length();
+        else
+            fontSize = scaledSize * 11 / ((float)inputString.length() / 2);
 
         Paint p = new Paint();
         c.drawColor(Color.WHITE);
@@ -166,9 +169,40 @@ public class MainActivity extends AppCompatActivity {
         Paint.FontMetrics fm = p.getFontMetrics();
         float textHeight = 0.7f * (fm.descent - fm.ascent);
         String[] splitString = inputString.split("");
-        for (int i = 0; i < splitString.length; i++) {
-            String s = splitString[i];
-            c.drawText(s, size.x / 2, size.y / 16 + i * textHeight, p);
+
+        if (inputString.length() < maxStringLen / 2) {
+            for (int i = 0; i < splitString.length; i++) {
+                String s = splitString[i];
+                c.drawText(s, size.x / 2, size.y / 16 + i * textHeight, p);
+            }
+        }
+        else {
+            int boundary = splitString.length / 2 + 1;
+
+            if (splitString.length % 2 == 0) {
+                // draw first line
+                for (int i = 0; i < boundary; i++) {
+                    String s = splitString[i];
+                    c.drawText(s, size.x / 3, size.y / 16 + i * textHeight, p);
+                }
+                // draw second line
+                for (int i = boundary; i < splitString.length; i++) {
+                    String s = splitString[i];
+                    c.drawText(s, size.x * 2 / 3, size.y / 16 + (i - boundary + 1) * textHeight, p);
+                }
+            }
+            else {
+                // draw first line
+                for (int i = 0; i < boundary; i++) {
+                    String s = splitString[i];
+                    c.drawText(s, size.x / 3, size.y / 16 + i * textHeight, p);
+                }
+                // draw second line
+                for (int i = boundary; i < splitString.length; i++) {
+                    String s = splitString[i];
+                    c.drawText(s, size.x * 2 / 3, size.y / 16 + (i - boundary + 1) * textHeight, p);
+                }
+            }
         }
 
         Bitmap preview = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
