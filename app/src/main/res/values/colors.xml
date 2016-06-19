@@ -2,5 +2,8 @@
 <resources>
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00695C</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#EC407A</color>
+
+    <color name="lightGray">#E0E0E0</color>
+    <color name="fabRipple">#FFC107</color>
 </resources>
