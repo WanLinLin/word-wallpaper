@@ -3,4 +3,5 @@
     <string name="generate">產生</string>
     <string name="enter_the_words">請輸入文字(最多11個)</string>
     <string name="set_wallpaper_ok">桌布設定成功！</string>
+    <string name="confirm">再點一次設定桌布！</string>
 </resources>

@@ -13,6 +13,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -36,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView preview;
     private EditText editText;
     private InputMethodManager inputManager;
-    int scaledSize;
+    private int scaledSize;
+    private boolean confirm = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +63,29 @@ public class MainActivity extends AppCompatActivity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                String inputText = editText.getText().toString();
-                currentBitmap = textToBitmap(inputText);
-                preview.setImageBitmap(currentBitmap);
+                submit();
                 // Hide keyboard
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
                 return true;
+            }
+        });
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                confirm = false;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputText = editText.getText().toString();
+                currentBitmap = textToBitmap(inputText);
+                preview.setImageBitmap(currentBitmap);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
@@ -76,15 +95,31 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentBitmap != null) {
-                    setAsWallpaper(currentBitmap);
-                    currentBitmap = null;
-                    // Show snackbar
-                    Snackbar.make(coordinatorLayout, getString(R.string.set_wallpaper_ok),
-                            Snackbar.LENGTH_SHORT).show();
-                }
+                submit();
             }
         });
+
+
+    }
+
+    private void submit() {
+        if (confirm) {
+            if (currentBitmap != null) {
+                setAsWallpaper(currentBitmap);
+                currentBitmap = null;
+                // Show snackbar
+                Snackbar.make(coordinatorLayout, getString(R.string.set_wallpaper_ok),
+                        Snackbar.LENGTH_SHORT).show();
+            }
+            confirm = false;
+        } else {
+            String inputText = editText.getText().toString();
+            currentBitmap = textToBitmap(inputText);
+            preview.setImageBitmap(currentBitmap);
+            Snackbar.make(coordinatorLayout, getString(R.string.confirm),
+                    Snackbar.LENGTH_SHORT).show();
+            confirm = true;
+        }
     }
 
     private void setAsWallpaper(Bitmap b) {
