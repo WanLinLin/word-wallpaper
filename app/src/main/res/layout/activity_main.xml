@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="wordwallpaper.android.com.wordwallpaper.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="wordwallpaper.android.com.wordwallpaper.MainActivity"
+    android:id="@+id/my_coordinatorlayout">
 
-    <EditText
+    <RelativeLayout
+        android:id="@+id/main_relativelayout"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
-        android:hint="@string/enter_the_words"
-        android:textSize="50dp"
-        android:textColor="@android:color/darker_gray"
-        android:background="@android:color/white"
-        android:layout_alignParentTop="true"
-        android:textAlignment="center"
-        android:cursorVisible="true"
-        android:id="@+id/edit_text" />
+        android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="336dp"
-        android:layout_below="@id/edit_text"
-        android:background="@android:color/white"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="232dp"
+            android:hint="@string/enter_the_words"
+            android:textSize="50dp"
+            android:textColor="@android:color/darker_gray"
+            android:background="@android:color/white"
+            android:layout_alignParentTop="true"
+            android:textAlignment="center"
+            android:cursorVisible="true"
+            android:id="@+id/edit_text" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="336dp"
+            android:layout_below="@id/edit_text"
+            android:background="@android:color/white"/>
+
+    </RelativeLayout>
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -31,13 +40,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_send_white_24dp" />
-
-    <!--<Button-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="336dp"-->
-        <!--android:textAlignment="center"-->
-        <!--android:textSize="30dp"-->
-        <!--android:text="@string/generate"-->
-        <!--android:id="@+id/button" />-->
-</RelativeLayout>
+        android:src="@drawable/ic_send_white_24dp"
+        app:layout_anchor="@id/main_relativelayout"
+        app:layout_anchorGravity="bottom|right|end"
+        />
+</android.support.design.widget.CoordinatorLayout>

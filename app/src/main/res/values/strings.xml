@@ -2,4 +2,5 @@
     <string name="app_name">WordWallpaper</string>
     <string name="generate">產生</string>
     <string name="enter_the_words">請輸入文字</string>
+    <string name="set_wallpaper_ok">桌布設定成功！</string>
 </resources>
