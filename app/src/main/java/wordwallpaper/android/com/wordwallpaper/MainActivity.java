@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -26,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private InputMethodManager inputManager;
     private int scaledSize;
     private boolean confirm = false;
+    private Point size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +56,15 @@ public class MainActivity extends AppCompatActivity {
         preview = (ImageView) findViewById(R.id.preview);
         editText = (EditText) findViewById(R.id.edit_text);
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        // Screen size
+        Display display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+        display.getRealSize(size);
+        // Placeholder bitmap
         try {
             placeholder = BitmapFactory.decodeStream(getAssets().open("placeholder.png"));
-        } catch (IOException e) {
-        }
+            placeholder = Bitmap.createScaledBitmap(placeholder, size.x, size.y, false);
+        } catch (IOException e) {}
 
         // Get font size
         scaledSize = getResources().getDimensionPixelSize(R.dimen.myFontSize);
@@ -143,10 +149,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Bitmap[] textToBitmap(String inputString) {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getRealSize(size);
-
         Bitmap b = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
