@@ -13,11 +13,11 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Log.d(LOG_TAG, "Enter pressed");
-                currentBitmap = textToBitmap(editText.getText().toString());
+                String inputText = editText.getText().toString();
+                currentBitmap = textToBitmap(inputText);
                 preview.setImageBitmap(currentBitmap);
                 // Hide keyboard
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
