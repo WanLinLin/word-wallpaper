@@ -17,14 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="232dp"
             android:hint="@string/enter_the_words"
-            android:textSize="50dp"
+            android:textSize="32sp"
             android:textColor="@android:color/darker_gray"
             android:background="@android:color/white"
             android:layout_alignParentTop="true"
             android:textAlignment="center"
             android:cursorVisible="true"
             android:id="@+id/edit_text"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:maxLength="10"/>
 
         <ImageView
             android:layout_width="match_parent"

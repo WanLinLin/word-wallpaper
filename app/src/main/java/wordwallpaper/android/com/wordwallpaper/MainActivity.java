@@ -13,7 +13,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -24,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Bitmap textToBitmap(String inputString) {
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size);
@@ -113,7 +112,13 @@ public class MainActivity extends AppCompatActivity {
         p.setTextAlign(Paint.Align.CENTER);
 
         // Draw text
-        c.drawText(inputString, size.x/2, size.y/5, p);
+        Paint.FontMetrics fm = p.getFontMetrics();
+        float textHeight = 0.8f*(fm.descent - fm.ascent);
+        String[] splitString = inputString.split("");
+        for (int i = 0; i < splitString.length; i++) {
+            String s = splitString[i];
+            c.drawText(s, size.x / 2, size.y / 6 + i * textHeight, p);
+        }
 
         return b;
     }
