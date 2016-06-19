@@ -3,6 +3,7 @@ package wordwallpaper.android.com.wordwallpaper;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
     private Typeface myTypeface;
     private Bitmap currentBitmap;
+    private Bitmap currentPreview;
+    private Bitmap placeholder;
     private CoordinatorLayout coordinatorLayout;
     private WallpaperManager wm;
     private ImageView preview;
@@ -52,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         preview = (ImageView) findViewById(R.id.preview);
         editText = (EditText) findViewById(R.id.edit_text);
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        try {
+            placeholder = BitmapFactory.decodeStream(getAssets().open("placeholder.png"));
+        } catch (IOException e) {
+        }
 
         // Get font size
         scaledSize = getResources().getDimensionPixelSize(R.dimen.myFontSize);
@@ -73,19 +80,20 @@ public class MainActivity extends AppCompatActivity {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                confirm = false;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String inputText = editText.getText().toString();
-                currentBitmap = textToBitmap(inputText);
-                preview.setImageBitmap(currentBitmap);
+                Bitmap[] tmp = textToBitmap(inputText);
+                currentBitmap = tmp[0];
+                currentPreview = tmp[1];
+                preview.setImageBitmap(currentPreview);
+                confirm = false;
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -114,8 +122,10 @@ public class MainActivity extends AppCompatActivity {
             confirm = false;
         } else {
             String inputText = editText.getText().toString();
-            currentBitmap = textToBitmap(inputText);
-            preview.setImageBitmap(currentBitmap);
+            Bitmap[] tmp = textToBitmap(inputText);
+            currentBitmap = tmp[0];
+            currentPreview = tmp[1];
+            preview.setImageBitmap(currentPreview);
             Snackbar.make(coordinatorLayout, getString(R.string.confirm),
                     Snackbar.LENGTH_SHORT).show();
             confirm = true;
@@ -131,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Bitmap textToBitmap(String inputString) {
+    private Bitmap[] textToBitmap(String inputString) {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size);
@@ -148,13 +158,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Draw text
         Paint.FontMetrics fm = p.getFontMetrics();
-        float textHeight = 0.8f * (fm.descent - fm.ascent);
+        float textHeight = 0.7f * (fm.descent - fm.ascent);
         String[] splitString = inputString.split("");
         for (int i = 0; i < splitString.length; i++) {
             String s = splitString[i];
             c.drawText(s, size.x / 2, size.y / 16 + i * textHeight, p);
         }
 
-        return b;
+        Bitmap preview = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
+        Canvas pc = new Canvas(preview);
+        pc.drawBitmap(b, 0, 0, null);
+        pc.drawBitmap(placeholder, 0, 0, null);
+
+        Bitmap[] rt = {b, preview};
+
+        return rt;
     }
 }
