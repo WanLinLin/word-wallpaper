@@ -1,8 +1,8 @@
 package wordwallpaper.android.com.wordwallpaper;
 
 import android.app.WallpaperManager;
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,10 +13,15 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Display;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -24,11 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MainActivity";
 
-    Typeface myTypeface;
-    Bitmap currentBitmap;
-    Snackbar snackbar;
-    CoordinatorLayout coordinatorLayout;
-    WallpaperManager wm;
+    private Typeface myTypeface;
+    private Bitmap currentBitmap;
+    private CoordinatorLayout coordinatorLayout;
+    private WallpaperManager wm;
+    private ImageView preview;
+    private EditText editText;
+    private InputMethodManager inputManager;
     int scaledSize;
 
     @Override
@@ -39,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         // Define some useful variables
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.my_coordinatorlayout);
         wm = WallpaperManager.getInstance(this);
+        preview = (ImageView) findViewById(R.id.preview);
+        editText = (EditText) findViewById(R.id.edit_text);
+        inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Get font size
         scaledSize = getResources().getDimensionPixelSize(R.dimen.myFontSize);
@@ -46,16 +56,21 @@ public class MainActivity extends AppCompatActivity {
         // Reserve Typeface
         myTypeface = Typeface.createFromAsset(getAssets(), "NotoSansCJKtc-Regular.otf");
 
-        // Init snackbar
-        snackbar = Snackbar.make(coordinatorLayout, getString(R.string.set_wallpaper_ok),
-                                 Snackbar.LENGTH_SHORT);
+        // Generate bitmap event
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.d(LOG_TAG, "Enter pressed");
+                currentBitmap = textToBitmap(editText.getText().toString());
+                preview.setImageBitmap(currentBitmap);
+                // Hide keyboard
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
+                return true;
+            }
+        });
 
-        // TODO: Generate bitmap event
-        try {
-            currentBitmap = BitmapFactory.decodeStream(getAssets().open("greeting.png"));
-        } catch (IOException e) {
-        }
-
+        // Add floating action button and its event
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setRippleColor(getResources().getColor(R.color.fabRipple));
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,12 +79,12 @@ public class MainActivity extends AppCompatActivity {
                 if (currentBitmap != null) {
                     setAsWallpaper(currentBitmap);
                     currentBitmap = null;
-                    snackbar.show();
+                    // Show snackbar
+                    Snackbar.make(coordinatorLayout, getString(R.string.set_wallpaper_ok),
+                            Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
-
-        textToBitmap("中山大");
     }
 
     private void setAsWallpaper(Bitmap b) {
@@ -86,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getRealSize(size);
-//
-//        Log.d("MainActivity", String.valueOf(size.y));
-//        Log.d("MainActivity", String.valueOf(size.x));
 
         Bitmap b = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
@@ -97,13 +109,11 @@ public class MainActivity extends AppCompatActivity {
         c.drawColor(Color.WHITE);
         p.setTypeface(myTypeface);
         p.setTextSize(scaledSize);
-        p.setColor(Color.BLACK);// 设置红色
-        //p.setTextAlign(Paint.Align.CENTER);
+        p.setColor(Color.BLACK);
+        p.setTextAlign(Paint.Align.CENTER);
 
-
-        c.drawText(inputString, 100, 200, p);// 画文本
-
-        ((ImageView)findViewById(R.id.image_view)).setImageBitmap(b);
+        // Draw text
+        c.drawText(inputString, size.x/2, size.y/5, p);
 
         return b;
     }
