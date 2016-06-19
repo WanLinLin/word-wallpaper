@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         String[] splitString = inputString.split("");
         for (int i = 0; i < splitString.length; i++) {
             String s = splitString[i];
-            c.drawText(s, size.x / 2, size.y / 6 + i * textHeight, p);
+            c.drawText(s, size.x / 2, size.y / 14 + i * textHeight, p);
         }
 
         return b;
