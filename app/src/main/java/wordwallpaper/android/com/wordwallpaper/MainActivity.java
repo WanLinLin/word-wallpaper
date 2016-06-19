@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView preview;
     private EditText editText;
     private InputMethodManager inputManager;
-    private int scaledSize;
+    private float scaledSize;
     private boolean confirm = false;
     private Point size;
 
@@ -153,10 +153,12 @@ public class MainActivity extends AppCompatActivity {
         Bitmap b = Bitmap.createBitmap(size.x, size.y, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
 
+        float fontSize = scaledSize * 11 / inputString.length();
+
         Paint p = new Paint();
         c.drawColor(Color.WHITE);
         p.setTypeface(myTypeface);
-        p.setTextSize(scaledSize);
+        p.setTextSize(fontSize);
         p.setColor(Color.BLACK);
         p.setTextAlign(Paint.Align.CENTER);
 
