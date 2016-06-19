@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">8+9正能量</string>
     <string name="generate">產生</string>
-    <string name="enter_the_words">請輸入文字(最多15個)</string>
+    <string name="enter_the_words">請輸入文字</string>
     <string name="set_wallpaper_ok">桌布設定成功！</string>
     <string name="confirm">再次點擊確認設定！</string>
 </resources>

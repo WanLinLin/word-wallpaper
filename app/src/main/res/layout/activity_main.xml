@@ -28,7 +28,7 @@
             android:cursorVisible="true"
             android:id="@+id/edit_text"
             android:inputType="textMultiLine"
-            android:maxLength="16" />
+            android:maxLength="24" />
 
         <ImageView
             android:layout_width="match_parent"
