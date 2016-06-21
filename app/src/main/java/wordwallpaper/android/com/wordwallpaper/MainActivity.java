@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "MainActivity";
 
-    private Typeface myTypeface, tfNoto;
+    private Typeface myTypeface, tfNoto, tfNotoLight;
     private Bitmap currentBitmap;
     private Bitmap currentPreview;
     private Bitmap placeholder;
@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Init Typeface
         tfNoto = Typeface.createFromAsset(getAssets(), "NotoSansCJKtc-Regular.otf");
+        tfNotoLight = Typeface.createFromAsset(getAssets(), "NotoSansCJKtc-Light.otf");
         myTypeface = tfNoto;
 
         // Init colors
@@ -89,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Font spinner
         Spinner fontSpinner = (Spinner) findViewById(R.id.spinner_font);
-        String[] fonts = {getString(R.string.notosans)};
+        // Define fonts
+        String[] fonts = { getString(R.string.notosans), getString(R.string.notosans_light) };
         ArrayAdapter<String> fontListAdapter = new ArrayAdapter<String>(
                 this, R.layout.spinner_item, fonts);
         fontSpinner.setAdapter(fontListAdapter);
@@ -99,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         myTypeface = tfNoto;
+                        topPaddingRatio = 1.0f;
+                        break;
+                    case 1:
+                        myTypeface = tfNotoLight;
                         topPaddingRatio = 1.0f;
                         break;
                 }

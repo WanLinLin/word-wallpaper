@@ -7,6 +7,7 @@
     <string name="notosans">思源黑體</string>
     <string name="zcool">站酷高端黑</string>
     <string name="founder">方正宋體</string>
+    <string name="notosans_light">思源輕巧</string>
     <string name="dark">暗色背景</string>
     <string name="light">亮色背景</string>
 </resources>
