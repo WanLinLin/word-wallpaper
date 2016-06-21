@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText editText;
     private InputMethodManager inputManager;
     private float scaledSize;
-    private boolean confirm = false;
     private Point size;
     private int maxStringLen = 15;
     private float topPaddingRatio = 1.0f;
@@ -64,20 +63,23 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+
         // Define some useful variables
         coordinatorLayout = (CoordinatorLayout)findViewById(R.id.my_coordinatorlayout);
         wm = WallpaperManager.getInstance(this);
         preview = (ImageView) findViewById(R.id.preview);
         editText = (EditText) findViewById(R.id.edit_text);
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        // Screen size (Solution found here: http://stackoverflow.com/a/23861333)
+
+
+        // Get Screen size (Solution found here: http://stackoverflow.com/a/23861333)
         Display display = getWindowManager().getDefaultDisplay();
         if (Build.VERSION.SDK_INT >= 17) {
             DisplayMetrics realMetrics = new DisplayMetrics();
             display.getRealMetrics(realMetrics);
             size = new Point(realMetrics.widthPixels, realMetrics.heightPixels);
         } else {
-            //reflection for this weird in-between time
+            // Reflection for this weird in-between time
             try {
                 Method mGetRawH = Display.class.getMethod("getRawHeight");
                 Method mGetRawW = Display.class.getMethod("getRawWidth");
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.e("Display Info", "Couldn't use reflection to get the real display metrics.");
             }
         }
+
+
         // Placeholder bitmap
         try {
             placeholder = BitmapFactory.decodeStream(getAssets().open("placeholder.png"));
@@ -94,14 +98,15 @@ public class MainActivity extends AppCompatActivity {
         // Get font size
         scaledSize = getResources().getDimensionPixelSize(R.dimen.myFontSize);
 
+
         // Init Typeface
         tfNoto = Typeface.createFromAsset(getAssets(), "NotoSansCJKtc-Regular.otf");
         tfNotoLight = Typeface.createFromAsset(getAssets(), "NotoSansCJKtc-Light.otf");
         myTypeface = tfNoto;
-
         // Init colors
         myBgColor = Color.WHITE;
         myFontColor = Color.BLACK;
+
 
         // Font spinner
         Spinner fontSpinner = (Spinner) findViewById(R.id.spinner_font);
@@ -130,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
 
         // Color spinner
         Spinner colorSpinner = (Spinner) findViewById(R.id.spinner_color);
@@ -164,9 +170,6 @@ public class MainActivity extends AppCompatActivity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                confirm = false;
-                // submit();
-                // Hide keyboard
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
                 return true;
@@ -209,24 +212,15 @@ public class MainActivity extends AppCompatActivity {
         currentBitmap = tmp[0];
         currentPreview = tmp[1];
         preview.setImageBitmap(currentPreview);
-        confirm = false;
     }
 
     private void submit() {
-        if (confirm) {
-            if (currentBitmap != null) {
-                setAsWallpaper(currentBitmap);
-                currentBitmap = null;
-                // Show snackbar
-                Snackbar.make(coordinatorLayout, getString(R.string.set_wallpaper_ok),
-                        Snackbar.LENGTH_SHORT).show();
-            }
-            confirm = false;
-        } else {
-            refreshPreview();
-            Snackbar.make(coordinatorLayout, getString(R.string.confirm),
+        if (currentBitmap != null) {
+            setAsWallpaper(currentBitmap);
+            currentBitmap = null;
+            // Show snackbar
+            Snackbar.make(coordinatorLayout, getString(R.string.set_wallpaper_ok),
                     Snackbar.LENGTH_SHORT).show();
-            confirm = true;
         }
     }
 
