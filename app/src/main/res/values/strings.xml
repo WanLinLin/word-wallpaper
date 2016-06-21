@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">8+9正能量</string>
     <string name="generate">產生</string>
-    <string name="enter_the_words">請輸入文字</string>
+    <string name="enter_the_words">請輸入文字(最多24字)</string>
     <string name="set_wallpaper_ok">桌布設定成功！</string>
     <string name="confirm">再次點擊確認設定！</string>
+    <string name="notosans">思源黑體</string>
+    <string name="zcool">站酷高端黑</string>
+    <string name="founder">方正宋體</string>
+    <string name="dark">暗色背景</string>
+    <string name="light">亮色背景</string>
 </resources>

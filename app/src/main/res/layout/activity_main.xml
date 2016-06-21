@@ -8,33 +8,62 @@
     tools:context="wordwallpaper.android.com.wordwallpaper.MainActivity"
     android:id="@+id/my_coordinatorlayout">
 
+
     <RelativeLayout
         android:id="@+id/main_relativelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:paddingBottom="16dp">
 
+        <android.support.v7.widget.Toolbar
+            android:title="@string/app_name"
+            android:id="@+id/toolbar"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_width="match_parent"
+            android:background="?attr/colorPrimary"
+            android:layout_alignParentTop="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:textAlignment="center">
+                <Spinner
+                    android:id="@+id/spinner_font"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+                <Spinner
+                    android:id="@+id/spinner_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </android.support.v7.widget.Toolbar>
+
         <EditText
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
             android:layout_width="match_parent"
             android:layout_height="232dp"
             android:hint="@string/enter_the_words"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:textColor="@android:color/darker_gray"
             android:background="@android:color/white"
-            android:layout_alignParentTop="true"
             android:textAlignment="center"
             android:cursorVisible="true"
             android:id="@+id/edit_text"
             android:inputType="textMultiLine"
-            android:maxLength="24" />
+            android:maxLength="24"
+            android:layout_below="@+id/toolbar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/preview" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="336dp"
-            android:layout_below="@id/edit_text"
-            android:id="@+id/preview"/>
+            android:id="@+id/preview"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
     <android.support.design.widget.FloatingActionButton
