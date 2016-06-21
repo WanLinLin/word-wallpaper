@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -30,6 +32,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,10 +70,22 @@ public class MainActivity extends AppCompatActivity {
         preview = (ImageView) findViewById(R.id.preview);
         editText = (EditText) findViewById(R.id.edit_text);
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        // Screen size
+        // Screen size (Solution found here: http://stackoverflow.com/a/23861333)
         Display display = getWindowManager().getDefaultDisplay();
-        size = new Point();
-        display.getRealSize(size);
+        if (Build.VERSION.SDK_INT >= 17) {
+            DisplayMetrics realMetrics = new DisplayMetrics();
+            display.getRealMetrics(realMetrics);
+            size = new Point(realMetrics.widthPixels, realMetrics.heightPixels);
+        } else {
+            //reflection for this weird in-between time
+            try {
+                Method mGetRawH = Display.class.getMethod("getRawHeight");
+                Method mGetRawW = Display.class.getMethod("getRawWidth");
+                size = new Point((Integer) mGetRawW.invoke(display), (Integer) mGetRawH.invoke(display));
+            } catch (Exception e) {
+                Log.e("Display Info", "Couldn't use reflection to get the real display metrics.");
+            }
+        }
         // Placeholder bitmap
         try {
             placeholder = BitmapFactory.decodeStream(getAssets().open("placeholder.png"));
