@@ -51,7 +51,7 @@
             android:cursorVisible="true"
             android:id="@+id/edit_text"
             android:inputType="textMultiLine"
-            android:maxLength="24"
+            android:maxLength="100"
             android:layout_below="@+id/toolbar"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
